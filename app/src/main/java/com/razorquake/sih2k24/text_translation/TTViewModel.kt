@@ -10,8 +10,11 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.razorquake.sih2k24.R
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class TTViewModel: ViewModel() {
     private val _state = mutableStateOf(TTState())
@@ -38,6 +41,11 @@ class TTViewModel: ViewModel() {
             }
             TTEvent.StopRecording -> {
                 stopRecording()
+            }
+            is TTEvent.TranslateText -> {
+                viewModelScope.launch {
+                    textToSpeech(event.text)
+                }
             }
         }
     }
@@ -101,6 +109,53 @@ class TTViewModel: ViewModel() {
     private fun stopRecording() {
         speechRecognizer.stopListening()
         _state.value = _state.value.copy(isRecording = false)
+    }
+
+    private suspend fun textToSpeech(text: String) {
+        withContext(Dispatchers.Main) {
+            text.forEach { char ->
+                _state.value = _state.value.copy(image = when (char) {
+                    '0' -> R.drawable.zero
+                    '1' -> R.drawable.one
+                    '2' -> R.drawable.two
+                    '3' -> R.drawable.three
+                    '4' -> R.drawable.four
+                    '5' -> R.drawable.five
+                    '6' -> R.drawable.six
+                    '7' -> R.drawable.seven
+                    '8' -> R.drawable.eight
+                    '9' -> R.drawable.nine
+                    'a' -> R.drawable.a
+                    'b' -> R.drawable.b
+                    'c' -> R.drawable.c
+                    'd' -> R.drawable.d
+                    'e' -> R.drawable.e
+                    'f' -> R.drawable.f
+                    'g' -> R.drawable.g
+                    'h' -> R.drawable.h
+                    'i' -> R.drawable.i
+                    'j' -> R.drawable.j
+                    'k' -> R.drawable.k
+                    'l' -> R.drawable.l
+                    'm' -> R.drawable.m
+                    'n' -> R.drawable.n
+                    'o' -> R.drawable.o
+                    'p' -> R.drawable.p
+                    'q' -> R.drawable.q
+                    'r' -> R.drawable.r
+                    's' -> R.drawable.s
+                    't' -> R.drawable.t
+                    'u' -> R.drawable.u
+                    'v' -> R.drawable.v
+                    'w' -> R.drawable.w
+                    'x' -> R.drawable.x
+                    'y' -> R.drawable.y
+                    'z' -> R.drawable.z
+                    else -> R.drawable.space
+                })
+                delay(1000)
+            }
+        }
     }
 
     override fun onCleared() {

@@ -8,4 +8,5 @@ sealed class TTEvent {
     data class StartRecording(val context: Context, val onResult: (String) -> Unit) : TTEvent()
     data object StopRecording : TTEvent()
     data class RecordingError(val error: String) : TTEvent()
+    data class TranslateText(val text: String) : TTEvent()
 }

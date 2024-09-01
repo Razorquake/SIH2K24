@@ -19,6 +19,7 @@ import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.ui.res.painterResource
@@ -78,6 +79,13 @@ fun TextTranslatorScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            Image(
+                painter = painterResource(id = state.image),
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally)
+            )
             Spacer(modifier = Modifier.weight(1f))
             // Recording indicator
             if (state.isRecording) {
@@ -130,7 +138,7 @@ fun TextTranslatorScreen(
                 IconButton(
                     onClick = {
                         if (state.query.isNotBlank()) {
-                            onTranslationComplete(state.query)
+                            onEvent(TTEvent.TranslateText(state.query))
                         } else {
                             if (ContextCompat.checkSelfPermission(
                                     context,
