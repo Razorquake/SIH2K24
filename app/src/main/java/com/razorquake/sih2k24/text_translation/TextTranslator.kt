@@ -22,6 +22,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.razorquake.sih2k24.R
@@ -86,6 +87,19 @@ fun TextTranslatorScreen(
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally)
             )
+            if(state.query.isNotEmpty()){
+                Row(
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                ) {
+                    state.query.forEachIndexed { index, char ->
+                        Text(
+                            text = char.toString(),
+                            color = colorResource(id = state.textColors[index]),
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
+                }
+            }
             Spacer(modifier = Modifier.weight(1f))
             // Recording indicator
             if (state.isRecording) {

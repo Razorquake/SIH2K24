@@ -16,18 +16,20 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class TTViewModel: ViewModel() {
+class TTViewModel : ViewModel() {
     private val _state = mutableStateOf(TTState())
     val state: State<TTState> = _state
     private lateinit var speechRecognizer: SpeechRecognizer
     fun onEvent(event: TTEvent) {
         when (event) {
             is TTEvent.UpdateQuery -> {
-                _state.value = _state.value.copy(query = event.query)
+                _state.value = _state.value.copy(query = event.query).updateTextColors()
             }
+
             is TTEvent.UpdateIsRecording -> {
                 _state.value = _state.value.copy(isRecording = event.isRecording)
             }
+
             is TTEvent.StartRecording -> {
                 startRecording(event.context, event.onResult)
             }
@@ -39,9 +41,11 @@ class TTViewModel: ViewModel() {
                     _state.value = _state.value.copy(error = null)
                 }
             }
+
             TTEvent.StopRecording -> {
                 stopRecording()
             }
+
             is TTEvent.TranslateText -> {
                 viewModelScope.launch {
                     textToSpeech(event.text)
@@ -49,10 +53,14 @@ class TTViewModel: ViewModel() {
             }
         }
     }
+
     private fun startRecording(context: Context, onResult: (String) -> Unit) {
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context)
         val speechRecognizerIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+            putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+            )
             putExtra(RecognizerIntent.EXTRA_LANGUAGE, java.util.Locale.getDefault())
         }
 
@@ -68,17 +76,21 @@ class TTViewModel: ViewModel() {
             override fun onReadyForSpeech(params: android.os.Bundle?) {
                 Log.d("SpeechRecognition", "Ready for speech")
             }
+
             override fun onBeginningOfSpeech() {
                 Log.d("SpeechRecognition", "Beginning of speech")
             }
+
             override fun onRmsChanged(rmsdB: Float) {
                 Log.d("SpeechRecognition", "RMS changed: $rmsdB")
                 _state.value = _state.value.copy(rmsValues = _state.value.rmsValues + rmsdB)
             }
+
             override fun onBufferReceived(buffer: ByteArray?) {}
             override fun onEndOfSpeech() {
                 Log.d("SpeechRecognition", "Speech ended")
             }
+
             override fun onError(error: Int) {
                 val errorMessage = when (error) {
                     SpeechRecognizer.ERROR_AUDIO -> "Audio recording error"
@@ -95,17 +107,21 @@ class TTViewModel: ViewModel() {
                 Log.e("SpeechRecognition", "Error: $errorMessage")
                 onEvent(TTEvent.RecordingError(errorMessage))
             }
+
             override fun onPartialResults(partialResults: android.os.Bundle?) {
-                val matches = partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                val matches =
+                    partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                 if (!matches.isNullOrEmpty()) {
                     onResult(matches[0])
                 }
             }
+
             override fun onEvent(eventType: Int, params: android.os.Bundle?) {}
         })
 
         speechRecognizer.startListening(speechRecognizerIntent)
     }
+
     private fun stopRecording() {
         speechRecognizer.stopListening()
         _state.value = _state.value.copy(isRecording = false)
@@ -113,7 +129,7 @@ class TTViewModel: ViewModel() {
 
     private suspend fun textToSpeech(text: String) {
         withContext(Dispatchers.Main) {
-            text.forEach { char ->
+            text.forEachIndexed { index, char ->
                 _state.value = _state.value.copy(image = when (char) {
                     '0' -> R.drawable.zero
                     '1' -> R.drawable.one
@@ -152,7 +168,15 @@ class TTViewModel: ViewModel() {
                     'y' -> R.drawable.y
                     'z' -> R.drawable.z
                     else -> R.drawable.space
-                })
+                },
+                    textColors = List(_state.value.textColors.size) { i ->
+                        if (i <= index)
+                            R.color.text_title
+                        else
+                            R.color.body
+
+                    }
+                )
                 delay(1000)
             }
         }
@@ -160,7 +184,7 @@ class TTViewModel: ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        if(::speechRecognizer.isInitialized) {
+        if (::speechRecognizer.isInitialized) {
             speechRecognizer.destroy()
         }
     }
