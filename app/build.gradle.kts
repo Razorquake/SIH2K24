@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.devtools.ksp)
+    alias(libs.plugins.gms.google.services)
+    alias(libs.plugins.dagger.hilt.android)
 }
 
 android {
@@ -70,6 +73,17 @@ dependencies {
     implementation(libs.org.tensorflow.lite.gpu)
     implementation(libs.org.tensorflow.lite.gpu.delegate.plugin)
     implementation(libs.org.tensorflow.lite.task.vision)
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.common)
+    implementation(libs.androidx.room.ktx)
+    testImplementation(libs.androidx.room.testing)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    ksp ("com.google.dagger:hilt-compiler:2.51.1")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

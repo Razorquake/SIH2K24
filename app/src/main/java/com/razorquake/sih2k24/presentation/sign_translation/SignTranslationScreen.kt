@@ -1,4 +1,4 @@
-package com.razorquake.sih2k24.sign_translation
+package com.razorquake.sih2k24.presentation.sign_translation
 
 import android.Manifest
 import android.content.pm.PackageManager

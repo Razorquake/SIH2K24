@@ -1,4 +1,4 @@
-package com.razorquake.sih2k24.text_translation
+package com.razorquake.sih2k24.presentation.text_translation
 
 import android.content.Context
 import android.content.Intent
@@ -11,12 +11,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.razorquake.sih2k24.R
+import com.razorquake.sih2k24.domain.SpeechLog
+import com.razorquake.sih2k24.domain.usecases.AppUseCases
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalDateTime
+import javax.inject.Inject
 
-class TTViewModel : ViewModel() {
+@HiltViewModel
+class TTViewModel @Inject constructor(
+    private val appUseCases: AppUseCases
+) : ViewModel() {
     private val _state = mutableStateOf(TTState())
     val state: State<TTState> = _state
     private lateinit var speechRecognizer: SpeechRecognizer
@@ -49,6 +57,12 @@ class TTViewModel : ViewModel() {
             is TTEvent.TranslateText -> {
                 viewModelScope.launch {
                     textToSpeech(event.text)
+                    appUseCases.insertSpeechLog(
+                        SpeechLog(
+                            text = event.text,
+                            timestamp = LocalDateTime.now()
+                        )
+                    )
                 }
             }
         }
@@ -167,6 +181,32 @@ class TTViewModel : ViewModel() {
                     'x' -> R.drawable.x
                     'y' -> R.drawable.y
                     'z' -> R.drawable.z
+                    'A' -> R.drawable.a
+                    'B' -> R.drawable.b
+                    'C' -> R.drawable.c
+                    'D' -> R.drawable.d
+                    'E' -> R.drawable.e
+                    'F' -> R.drawable.f
+                    'G' -> R.drawable.g
+                    'H' -> R.drawable.h
+                    'I' -> R.drawable.i
+                    'J' -> R.drawable.j
+                    'K' -> R.drawable.k
+                    'L' -> R.drawable.l
+                    'M' -> R.drawable.m
+                    'N' -> R.drawable.n
+                    'O' -> R.drawable.o
+                    'P' -> R.drawable.p
+                    'Q' -> R.drawable.q
+                    'R' -> R.drawable.r
+                    'S' -> R.drawable.s
+                    'T' -> R.drawable.t
+                    'U' -> R.drawable.u
+                    'V' -> R.drawable.v
+                    'W' -> R.drawable.w
+                    'X' -> R.drawable.x
+                    'Y' -> R.drawable.y
+                    'Z' -> R.drawable.z
                     else -> R.drawable.space
                 },
                     textColors = List(_state.value.textColors.size) { i ->

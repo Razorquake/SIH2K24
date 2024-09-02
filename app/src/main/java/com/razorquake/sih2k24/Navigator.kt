@@ -28,15 +28,18 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.razorquake.sih2k24.sign_translation.SignTranslatorScreen
-import com.razorquake.sih2k24.text_translation.TTViewModel
-import com.razorquake.sih2k24.text_translation.TextTranslatorScreen
+import com.razorquake.sih2k24.presentation.history.HistoryScreen
+import com.razorquake.sih2k24.presentation.history.HistoryViewModel
+import com.razorquake.sih2k24.presentation.sign_translation.SignTranslatorScreen
+import com.razorquake.sih2k24.presentation.text_translation.TTViewModel
+import com.razorquake.sih2k24.presentation.text_translation.TextTranslatorScreen
 import com.razorquake.sih2k24.ui.theme.SIH2K24Theme
 
 @Composable
@@ -107,8 +110,13 @@ fun Navigator(){
                 )
             }
             composable(Route.HistoryScreen.route){
+                val viewModel: HistoryViewModel = hiltViewModel()
+                val state = viewModel.state.value
                 HistoryScreen(
-                    modifier = Modifier.padding(bottomPaddingValues)
+                    modifier = Modifier,
+                    state = state,
+                    onEvent = viewModel::onEvent,
+                    navigateToDetails = {}
                 )
             }
             composable(Route.SettingsScreen.route){
@@ -120,7 +128,7 @@ fun Navigator(){
                 SignTranslatorScreen()
             }
             composable(Route.TextTranslationScreen.route){
-                val viewModel: TTViewModel = viewModel()
+                val viewModel: TTViewModel = hiltViewModel()
                 val state = viewModel.state
                 TextTranslatorScreen(
                     state = state.value,
@@ -138,12 +146,7 @@ fun SettingsScreen(modifier: Modifier) {
     Column(modifier.fillMaxSize()) {}
 }
 
-@Composable
-fun HistoryScreen(modifier: Modifier) {
-    Column(modifier.fillMaxSize()) {
 
-    }
-}
 
 @Composable
 fun BottomNavigation(

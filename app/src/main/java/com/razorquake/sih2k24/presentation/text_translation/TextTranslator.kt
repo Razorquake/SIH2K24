@@ -1,4 +1,4 @@
-package com.razorquake.sih2k24.text_translation
+package com.razorquake.sih2k24.presentation.text_translation
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -26,7 +26,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.razorquake.sih2k24.R
-import com.razorquake.sih2k24.text_translation.components.FrequencyChart
+import com.razorquake.sih2k24.presentation.text_translation.components.FrequencyChart
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

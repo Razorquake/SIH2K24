@@ -1,4 +1,4 @@
-package com.razorquake.sih2k24.text_translation
+package com.razorquake.sih2k24.presentation.text_translation
 
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes

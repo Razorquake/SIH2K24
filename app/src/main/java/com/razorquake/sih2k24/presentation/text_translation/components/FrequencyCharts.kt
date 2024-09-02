@@ -1,4 +1,4 @@
-package com.razorquake.sih2k24.text_translation.components
+package com.razorquake.sih2k24.presentation.text_translation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
