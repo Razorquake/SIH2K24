@@ -1,6 +1,6 @@
 package com.razorquake.sih2k24.domain.repository
 
-import com.razorquake.sih2k24.domain.SpeechLog
+import com.razorquake.sih2k24.domain.models.SpeechLog
 import kotlinx.coroutines.flow.Flow
 
 interface AppRepository {

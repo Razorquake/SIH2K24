@@ -1,4 +1,4 @@
-package com.razorquake.sih2k24.domain
+package com.razorquake.sih2k24.domain.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

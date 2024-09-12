@@ -1,7 +1,12 @@
 package com.razorquake.sih2k24
 
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -17,6 +23,7 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -29,7 +36,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -43,7 +49,7 @@ import com.razorquake.sih2k24.presentation.text_translation.TextTranslatorScreen
 import com.razorquake.sih2k24.ui.theme.SIH2K24Theme
 
 @Composable
-fun Navigator(){
+fun Navigator(onLogout: () -> Unit) {
     val bottomNavigationItems = remember {
         listOf(
             BottomNavigationItem(
@@ -101,15 +107,15 @@ fun Navigator(){
             navController = navController,
             startDestination = Route.HomeScreen.route,
             modifier = Modifier.statusBarsPadding()
-        ){
-            composable(Route.HomeScreen.route){
+        ) {
+            composable(Route.HomeScreen.route) {
                 HomeScreen(
-                    onTextTranslationClick = {navController.navigate(Route.TextTranslationScreen.route)},
-                    onSignTranslationClick = {navController.navigate(Route.SignTranslationScreen.route)},
+                    onTextTranslationClick = { navController.navigate(Route.TextTranslationScreen.route) },
+                    onSignTranslationClick = { navController.navigate(Route.SignTranslationScreen.route) },
                     modifier = Modifier
                 )
             }
-            composable(Route.HistoryScreen.route){
+            composable(Route.HistoryScreen.route) {
                 val viewModel: HistoryViewModel = hiltViewModel()
                 val state = viewModel.state.value
                 HistoryScreen(
@@ -119,31 +125,48 @@ fun Navigator(){
                     navigateToDetails = {}
                 )
             }
-            composable(Route.SettingsScreen.route){
+            composable(Route.SettingsScreen.route) {
                 SettingsScreen(
+                    onLogout = onLogout,
                     modifier = Modifier.padding(bottomPaddingValues)
                 )
             }
-            composable(Route.SignTranslationScreen.route){
+            composable(Route.SignTranslationScreen.route) {
                 SignTranslatorScreen()
             }
-            composable(Route.TextTranslationScreen.route){
+            composable(Route.TextTranslationScreen.route) {
                 val viewModel: TTViewModel = hiltViewModel()
                 val state = viewModel.state
                 TextTranslatorScreen(
                     state = state.value,
                     onEvent = viewModel::onEvent,
-                    onBackClick = {navController.navigateUp()},
+                    onBackClick = { navController.navigateUp() },
                     onTranslationComplete = {}
                 )
             }
         }
+
     }
+}
+fun Context.findActivity(): Activity? {
+    var context = this
+    while (context is ContextWrapper) {
+        if (context is Activity) return context
+        context = context.baseContext
+    }
+    return null
 }
 
 @Composable
-fun SettingsScreen(modifier: Modifier) {
-    Column(modifier.fillMaxSize()) {}
+fun SettingsScreen(modifier: Modifier, onLogout: () -> Unit) {
+    Column(modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Button(onClick = onLogout) {
+            Text(text = "Logout")
+        }
+    }
 }
 
 

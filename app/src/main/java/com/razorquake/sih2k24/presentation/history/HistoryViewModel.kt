@@ -1,12 +1,12 @@
 package com.razorquake.sih2k24.presentation.history
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.razorquake.sih2k24.domain.SpeechLog
+import com.razorquake.sih2k24.domain.models.SpeechLog
 import com.razorquake.sih2k24.domain.usecases.AppUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -16,8 +16,8 @@ import javax.inject.Inject
 class HistoryViewModel @Inject constructor(
     private val appUseCases: AppUseCases
 ): ViewModel() {
-    private val _state = MutableStateFlow(HistoryState())
-    val state: StateFlow<HistoryState> = _state
+    private val _state = mutableStateOf(HistoryState())
+    val state: State<HistoryState> = _state
     fun onEvent(event: HistoryEvent){
         when(event){
             is HistoryEvent.DeleteSpeechLog -> {

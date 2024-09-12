@@ -5,7 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.razorquake.sih2k24.domain.SpeechLog
+import com.razorquake.sih2k24.domain.models.SpeechLog
 import kotlinx.coroutines.flow.Flow
 
 @Dao

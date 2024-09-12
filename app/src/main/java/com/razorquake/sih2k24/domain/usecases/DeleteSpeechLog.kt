@@ -1,6 +1,6 @@
 package com.razorquake.sih2k24.domain.usecases
 
-import com.razorquake.sih2k24.domain.SpeechLog
+import com.razorquake.sih2k24.domain.models.SpeechLog
 import com.razorquake.sih2k24.domain.repository.AppRepository
 
 class DeleteSpeechLog(

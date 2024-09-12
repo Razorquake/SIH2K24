@@ -1,7 +1,6 @@
 package com.razorquake.sih2k24.presentation.history
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.razorquake.sih2k24.domain.SpeechLog
+import com.razorquake.sih2k24.domain.models.SpeechLog
 import com.razorquake.sih2k24.presentation.history.components.SpeechLog
 
 @Composable

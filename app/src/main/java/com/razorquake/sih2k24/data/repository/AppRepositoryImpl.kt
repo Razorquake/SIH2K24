@@ -1,7 +1,7 @@
-package com.razorquake.sih2k24.data
+package com.razorquake.sih2k24.data.repository
 
 import com.razorquake.sih2k24.data.local.SpeechLogDao
-import com.razorquake.sih2k24.domain.SpeechLog
+import com.razorquake.sih2k24.domain.models.SpeechLog
 import com.razorquake.sih2k24.domain.repository.AppRepository
 import kotlinx.coroutines.flow.Flow
 

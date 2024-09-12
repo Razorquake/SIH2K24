@@ -11,7 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.razorquake.sih2k24.R
-import com.razorquake.sih2k24.domain.SpeechLog
+import com.razorquake.sih2k24.domain.models.SpeechLog
 import com.razorquake.sih2k24.domain.usecases.AppUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -56,13 +56,13 @@ class TTViewModel @Inject constructor(
 
             is TTEvent.TranslateText -> {
                 viewModelScope.launch {
-                    textToSpeech(event.text)
                     appUseCases.insertSpeechLog(
                         SpeechLog(
                             text = event.text,
                             timestamp = LocalDateTime.now()
                         )
                     )
+                    textToSpeech(event.text)
                 }
             }
         }
