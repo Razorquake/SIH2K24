@@ -2,6 +2,7 @@ package com.razorquake.sih2k24.di
 
 import android.app.Application
 import android.content.Context
+import androidx.credentials.CredentialManager
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -27,6 +28,7 @@ import com.razorquake.sih2k24.domain.usecases.GetSpeechLog
 import com.razorquake.sih2k24.domain.usecases.InsertSpeechLog
 import com.razorquake.sih2k24.domain.usecases.auth.AuthUseCases
 import com.razorquake.sih2k24.domain.usecases.auth.GetAuthStateUseCase
+import com.razorquake.sih2k24.domain.usecases.auth.GoogleSignInUseCase
 import com.razorquake.sih2k24.domain.usecases.auth.LoginUseCase
 import com.razorquake.sih2k24.domain.usecases.auth.LogoutUseCase
 import com.razorquake.sih2k24.domain.usecases.auth.SignUpUseCase
@@ -104,6 +106,12 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideCredentialManager(@ApplicationContext context: Context): CredentialManager {
+        return CredentialManager.create(context)
+    }
+
+    @Provides
+    @Singleton
     fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> = context.dataStore
 
     @Provides
@@ -120,12 +128,14 @@ object AppModule {
     fun provideAuthUseCases(
         authRepository: AuthRepository,
         userRepository: UserRepository,
-        auth: FirebaseAuth
+        auth: FirebaseAuth,
+        @ApplicationContext context: Context
     ) = AuthUseCases(
         loginUseCase = LoginUseCase(authRepository, auth),
         signUpUseCase = SignUpUseCase(authRepository, userRepository, auth),
         logoutUseCase = LogoutUseCase(authRepository, auth),
-        getAuthStateUseCase = GetAuthStateUseCase(authRepository)
+        getAuthStateUseCase = GetAuthStateUseCase(authRepository),
+        googleSignInUseCase = GoogleSignInUseCase(authRepository, userRepository, auth)
     )
 
     @Provides

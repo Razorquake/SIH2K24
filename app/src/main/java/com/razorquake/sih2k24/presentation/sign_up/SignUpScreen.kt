@@ -1,5 +1,7 @@
 package com.razorquake.sih2k24.presentation.sign_up
 
+import android.app.Activity
+import androidx.compose.foundation.Image
 import com.razorquake.sih2k24.presentation.auth.AuthViewModel
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -7,10 +9,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.razorquake.sih2k24.R
 import com.razorquake.sih2k24.data.Validators
 import com.razorquake.sih2k24.presentation.auth.AuthState
 
@@ -29,6 +35,7 @@ fun SignUpScreen(
     var passwordError by remember { mutableStateOf<String?>(null) }
     var confirmPasswordError by remember { mutableStateOf<String?>(null) }
 
+    val context = LocalContext.current as Activity
     val authState by viewModel.authState.collectAsState()
 
     LaunchedEffect(authState) {
@@ -146,6 +153,24 @@ fun SignUpScreen(
 
         TextButton(onClick = onNavigateToLogin) {
             Text("Already have an account? Log in")
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            HorizontalDivider(modifier = Modifier.weight(1f), color = colorResource( R.color.body))
+            Text("OR", color = colorResource( R.color.body), style = MaterialTheme.typography.bodySmall)
+            HorizontalDivider(modifier = Modifier.weight(1f), color = colorResource( R.color.body))
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        IconButton(onClick = {viewModel.startGoogleSignIn(context)}) {
+            Image(
+                painter = painterResource(R.drawable.google),
+                contentDescription = "Google",
+                modifier = Modifier.size(48.dp)
+            )
         }
     }
 }

@@ -1,5 +1,8 @@
 package com.razorquake.sih2k24.presentation.auth
 
+import android.app.Activity
+import android.util.Log
+import androidx.credentials.GetCredentialResponse
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.razorquake.sih2k24.domain.usecases.auth.AuthUseCases
@@ -22,6 +25,28 @@ class AuthViewModel @Inject constructor(
             authUseCases.getAuthStateUseCase().collect { isAuthenticated ->
                 _authState.value = if (isAuthenticated) AuthState.Authenticated else AuthState.Unauthenticated
             }
+        }
+    }
+
+    fun startGoogleSignIn(activity: Activity) {
+        viewModelScope.launch {
+            Log.d("AuthViewModel", "Starting Google Sign-In")
+            try {
+                val credential = authUseCases.googleSignInUseCase.getGoogleSignInCredential(activity)
+                handleGoogleSignInResult(credential)
+            } catch (e: Exception) {
+                Log.e("AuthViewModel", "Failed to start Google Sign-In: ${e.message}")
+                _authState.value = AuthState.Error("Failed to start Google Sign-In: ${e.message}")
+            }
+        }
+    }
+
+    private fun handleGoogleSignInResult(credential: GetCredentialResponse) {
+        viewModelScope.launch {
+            _authState.value = AuthState.Loading
+            authUseCases.googleSignInUseCase(credential)
+                .onSuccess { _authState.value = AuthState.Authenticated }
+                .onFailure { _authState.value = AuthState.Error("Google Sign-In failed: ${it.message}") }
         }
     }
 
@@ -52,6 +77,7 @@ class AuthViewModel @Inject constructor(
 
 sealed class AuthState {
     data object Initial : AuthState()
+    data object Loading : AuthState()
     data object Authenticated : AuthState()
     data object Unauthenticated : AuthState()
     data class Error(val message: String) : AuthState()
